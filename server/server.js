@@ -21,6 +21,6 @@ app.post('admin/user', (req, res) => {
     res.send('Ok')
 })
 require("./routes/user.routes")(app);
-// require("./routes/tricycle.routes")(app)
+require("./routes/tricycle.routes")(app)
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

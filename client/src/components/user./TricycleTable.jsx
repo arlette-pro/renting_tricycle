@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import NewTricycle from './NewTricycle.dialog';
 import EditIcon from '@mui/icons-material/Edit';
 import DisabledIcon from '@mui/icons-material/DisabledByDefaultOutlined';
 import ArchiveIcon from '@mui/icons-material/ArchiveOutlined';
@@ -12,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from '../Title';
 import DisabledByDefaultOutlined from '@mui/icons-material/DisabledByDefaultOutlined';
+import NewUserDialog from './NewUser.dialog';
 
 // Generate Order Data
 function createData(id, brand, weightCapacity, volumeCapacity, speciality, disponibility) {
@@ -159,6 +159,7 @@ export default function ControllerTable(props) {
         </TableBody>
       </Table>
       <newTricycle toEdit={toEdit} onNewTricycle={handleNewTricycle} />
+      
     </React.Fragment>
   );
 }

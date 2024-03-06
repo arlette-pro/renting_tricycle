@@ -76,8 +76,7 @@ export default function NewUserDialog(props) {
         <DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            Create a new user.
           </DialogContentText>
           <TextField
             autoFocus
@@ -131,7 +130,7 @@ export default function NewUserDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button type="submit">Create</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

@@ -16,8 +16,8 @@ import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from '../components/ListItems';
+// import NotificationsIcon from '@mui/icons-material/Notifications';
+import { mainListItems} from '../components/ListItems';
 import { Outlet } from 'react-router-dom';
 import Deposits from '../components/Deposits';
 import Orders from '../components/Orders';
@@ -121,11 +121,11 @@ export  function Dashboard() {
             >
               Dashboard
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+            {/* <IconButton color="inherit">
+              <Badge color="secondary">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -145,7 +145,7 @@ export  function Dashboard() {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            {/* {secondaryListItems} */}
           </List>
         </Drawer>
         <Box

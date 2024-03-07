@@ -1,9 +1,10 @@
 import * as React from 'react';
+import NewTricycle from './NewTricycle.dialog'
 import EditIcon from '@mui/icons-material/Edit';
 import DisabledIcon from '@mui/icons-material/DisabledByDefaultOutlined';
-import ArchiveIcon from '@mui/icons-material/ArchiveOutlined';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,7 +12,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from '../Title';
 import DisabledByDefaultOutlined from '@mui/icons-material/DisabledByDefaultOutlined';
-import NewUserDialog from './NewUser.dialog';
+// import NewUserDialog from './NewUser.dialog';
 
 // Generate Order Data
 function createData(id, brand, weightCapacity, volumeCapacity, speciality, disponibility) {
@@ -63,6 +64,8 @@ function preventDefault(event) {
 export default function ControllerTable(props) {
   const [ rows, setRows ] = React.useState(rowVar)
   const [toEdit, setToEdit] = React.useState(null)
+  const [open, setOpen] = React.useState(false);
+ 
   // const [toArchiveId, setToArchiveId] = React.useState(null)
   
 
@@ -92,19 +95,23 @@ export default function ControllerTable(props) {
   function editTricycle(tricycle){
     setToEdit(tricycle)
   }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-  function deactivateTricycle(tricycle) {
-    const tricycleIndex = rows.findIndex(
-      (row) => row.id === tricycle.id,
-    )
-    if (tricycleIndex === -1) {
-      return
-    }
-    rows[ tricycleIndex ].deactivated = true
-    setRows([ ...rows ])
-  }
+  // function deactivateTricycle(tricycle) {
+  //   const tricycleIndex = rows.findIndex(
+  //     (row) => row.id === tricycle.id,
+  //   )
+  //   if (tricycleIndex === -1) {
+  //     return
+  //   }
+  //   rows[ tricycleIndex ].deactivated = true
+  //   setRows([ ...rows ])
+  // }
 
-  function archiveTricycle(tricycle) {
+  // make it to be delete from the database
+  function deleteTricycle(tricycle) {
     const tricycleIndex = rows.findIndex(
       (row) => row.id === tricycle.id,
     )
@@ -145,11 +152,15 @@ export default function ControllerTable(props) {
                 <IconButton color="inherit" onClick={() => editTricycle(row)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton color="inherit" onClick={() => archiveTricycle(row)}>
-                  <ArchiveIcon />
+                <IconButton color="inherit" onClick={() => deleteTricycle(row)}>
+                  <DeleteIcon />
                 </IconButton>
-                <IconButton color="inherit" onClick={() => deactivateTricycle(row)}>
+                {/* <IconButton color="inherit" onClick={() => deactivateTricycle(row)}>
                   <DisabledIcon />
+                </IconButton> */}
+       
+                <IconButton color="primary" href="/details/tricycles" onClick={handleClickOpen}>
+                  <InfoIcon />
                 </IconButton>
               </TableCell>
               {/* <TableCell>{row.paymentMethod}</TableCell>
@@ -158,7 +169,7 @@ export default function ControllerTable(props) {
           ))}
         </TableBody>
       </Table>
-      <newTricycle toEdit={toEdit} onNewTricycle={handleNewTricycle} />
+      <NewTricycle toEdit={toEdit} onNewTricycle={handleNewTricycle} />
       
     </React.Fragment>
   );

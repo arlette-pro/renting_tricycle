@@ -10,6 +10,8 @@ import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import { Tricycle } from './pages/Tricycle';
 import { Users } from './pages/Users';
+import DetailsTricycle from './pages/DetailsTricycle';
+import BookTricycle from './pages/BookTricycle';
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
         <Route path={"tricycles"} element={<Tricycle />}/>
         <Route path={"users"} element={<Users />}/>
       </Route>
+      <Route path={'/details/tricycles'} element={<DetailsTricycle/> }/>
+      <Route path={'/book/tricycles'} element={<BookTricycle/> }/>
     </Routes>
   )
 }

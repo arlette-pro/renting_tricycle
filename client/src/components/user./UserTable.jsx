@@ -125,7 +125,7 @@ export default function UserTable(props) {
             <TableCell>Name</TableCell>
             <TableCell>Role</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell align="center">Actions</TableCell>
             {/* <TableCell align="right">Sale Amount</TableCell> */}
           </TableRow>
         </TableHead>
@@ -139,11 +139,11 @@ export default function UserTable(props) {
               <TableCell>{row.email}</TableCell>
               <TableCell align="right">
                 <IconButton color="inherit" onClick={() => editUser(row)}>
-                  <EditIcon />
+                 Edit <EditIcon />
                 </IconButton>
-                <ArchiveUserWarningDialog onArchive={() => archiveUser(row)} />
+                Archive<ArchiveUserWarningDialog  onArchive={() => archiveUser(row)} />
                 <IconButton color="inherit" onClick={() => deactivateUser(row)} >
-                  <DisabledIcon />
+                  Disable<DisabledIcon />
                 </IconButton>
               </TableCell>
               {/* <TableCell>{row.paymentMethod}</TableCell>

@@ -17,7 +17,7 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems} from '../components/ListItems';
+import { mainListItems, secondaryListItems} from '../components/ListItems';
 import { Outlet } from 'react-router-dom';
 import Deposits from '../components/Deposits';
 import Orders from '../components/Orders';
@@ -26,9 +26,9 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      {/* <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
+      </Link>{' '} */}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -145,7 +145,7 @@ export  function Dashboard() {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {/* {secondaryListItems} */}
+            {secondaryListItems}
           </List>
         </Drawer>
         <Box

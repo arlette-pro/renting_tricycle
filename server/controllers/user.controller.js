@@ -1,5 +1,7 @@
 const UserModel = require("../models/user.model");
+const secret_key = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken"); // for our web tokens
+const bcrypt = require("bcryptjs")
 
 function isUserActive(user) {
   return user.deactivated === false;
@@ -8,37 +10,66 @@ function isUserActive(user) {
 module.exports = {
   registerNewUser: async (req, res) => {
     try {
-      const {deactivated, ...rest} = req.body
+      const {deactivated,confirmedPassword, ...rest} = req.body
+      rest.confirmedPassword = confirmedPassword;
       const newUser = await UserModel.create(rest);
 
-      const { _id, name, email, role, createdAt, updatedAt } = newUser;
-      const resUser = { name, email, role, createdAt, updatedAt, _id };
+      const { _id, firstName, lastName, email, role, createdAt, updatedAt } = newUser;
+      const resUser = { firstName, lastName, email, role, createdAt, updatedAt, _id };
       //     // create a token and save the user's id and sign iff with the secret key from our .env file
-
-      res.status(201).json({ message: "success!", newUser: resUser });
+      const userToken = jwt.sign(
+        {
+          id: newUser._id,
+        },
+        secret_key
+      );
+      res
+      .cookie("userToken", userToken, {
+        httpOnly: true,
+      })
+      .status(201)
+      .json({ message: "success!", newUser: resUser });
+      console.log(rest);
     } catch (err) {
       res.status(400).json(err);
     }
   },
-  login: async(req, res) => {
-    const user = await UserModel.findOne({ email: req.body.email });
-    // @todo verify if the provided password when hashed corresponds to the hashed password that was saved when this user was registered
+
+  login : async (req, res) => {
+    try {
+      const user = await UserModel.findOne({ email: req.body.email });
+          // @todo verify if the provided password when hashed corresponds to the hashed password that was saved when this user was registered
     /**
      * if (hash(req.body.password) !== user.password) {
      *  const UNAUTHORIZED = 401
      *  res.status(UNAUTHORIZED).json({ message: "Invalid email/password combination"})
      * }
      */
-    const userToken = jwt.sign({
-        id: user._id
-    }, process.env.SECRET_KEY);
-    res
-        .cookie("usertoken", userToken, {
-            httpOnly: true
-        })
-        .json({ msg: "success!" });
-},
-
+  
+      if (!user) {
+        res.status(400).json({ message: 'Invalid Login Credentials' });
+      } else {
+        const doPasswordsMatch = await bcrypt.compare(
+          req.body.password,
+          user.password
+        );
+  
+        if (!doPasswordsMatch) {
+          res.status(400).json({ message: 'Invalid Login Credentials' });
+        } else {
+          const userToken = jwt.sign({ id: user._id }, secret_key);
+  
+          res
+            .cookie('usertoken', userToken, {
+              httpOnly: true,
+            })
+            .json({ msg: 'success!' });
+        }
+      }
+    } catch (err) {
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  },
 
 
   logoutUser: (req, res) => {
@@ -102,7 +133,7 @@ module.exports = {
       });
   },
   createUser: async (req, res) => {
-    const { email, role, name } = req.body;
+    const { email, role, firstName, lastName } = req.body;
     try {
       const existingUser = await UserModel.findOne({ email });
       if (existingUser) {
@@ -112,7 +143,8 @@ module.exports = {
 
       // @todo: create and hash password here and include in the user object
       const userObject = {
-        name,
+        firstName,
+        lastName,
         role,
         email,
         deactivated: false,

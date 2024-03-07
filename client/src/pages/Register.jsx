@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useState } from "react";
 
 function Copyright(props) {
   return (
@@ -22,9 +24,9 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      {/* <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{" "}
+      </Link>{" "} */}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -35,7 +37,12 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+
 export function Register() {
+  const [role, setRole] = useState("");
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -61,7 +68,7 @@ export function Register() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Register
           </Typography>
           <Box
             component="form"
@@ -120,6 +127,31 @@ export function Register() {
               id="ConfirmPassword"
               autoComplete="current-password"
             />
+            <FormControl
+              variant="standard"
+              sx={{ m: 1, minWidth: 120 }}
+              fullWidth
+            >
+              <InputLabel id="demo-simple-select-standard-label">
+                Role
+              </InputLabel>
+              <Select
+                labelId="select-role_label"
+                id="select-role"
+                name="role"
+                value={role}
+                required
+                onChange={handleChange}
+                label="Role"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={"Admin"}>Admin</MenuItem>
+                <MenuItem value={"PT"}>PT</MenuItem>
+                <MenuItem value={"LT"}>LT</MenuItem>
+              </Select>
+            </FormControl>
 
             <Button
               type="submit"
@@ -127,12 +159,12 @@ export function Register() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Register
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/" variant="body2">
-                  {"Already have an account? Log In"}
+                <Link href="/login" variant="body2">
+                  {"Already have an account? Login"}
                 </Link>
               </Grid>
             </Grid>

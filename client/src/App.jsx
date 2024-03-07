@@ -6,12 +6,12 @@ import './App.css'
 
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import { Tricycle } from './pages/Tricycle';
 import { Users } from './pages/Users';
 import DetailsTricycle from './pages/DetailsTricycle';
 import BookTricycle from './pages/BookTricycle';
+import Register from './pages/Register';
 
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
   return (
     <Routes>
       <Route path={'/'} element={<Login />}/>
-      <Route path={'/signup'} element={<SignUp/>}/>
+      <Route path={'/register'} element={<Register/>}/>
       <Route path={'/dashboard'} element={<Dashboard />}>
         <Route path={"tricycles"} element={<Tricycle />}/>
         <Route path={"users"} element={<Users />}/>

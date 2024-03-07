@@ -35,7 +35,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export function SignUp() {
+export function Register() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -132,7 +132,7 @@ export function SignUp() {
             <Grid container>
               <Grid item>
                 <Link href="/" variant="body2">
-                  {"Already have an account? Sign In"}
+                  {"Already have an account? Log In"}
                 </Link>
               </Grid>
             </Grid>
@@ -144,4 +144,4 @@ export function SignUp() {
   );
 }
 
-export default SignUp;
+export default Register;

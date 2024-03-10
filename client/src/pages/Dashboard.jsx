@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useContext, useEffect } from "react";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -9,18 +9,15 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
+import { UserContext } from '../context/user.context';
 import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems} from '../components/ListItems';
+import { MenuItem } from '../components/ListItems';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MopedIcon from '@mui/icons-material/Moped';
+import GroupIcon from '@mui/icons-material/Group';
 import { Outlet } from 'react-router-dom';
-import Deposits from '../components/Deposits';
-import Orders from '../components/Orders';
 
 function Copyright(props) {
   return (
@@ -81,14 +78,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export  function Dashboard() {
-  const [open, setOpen] = React.useState(true);
+  const connectedUser = useContext(UserContext);
+  const [open, setOpen] = useState(true);
+  const [ role, setRole ] = useState()
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  useEffect(
+    () => {
+      setRole(connectedUser.role ?? null)
+    },
+    [ connectedUser ]
+  )
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -121,11 +126,6 @@ export  function Dashboard() {
             >
               Dashboard
             </Typography>
-            {/* <IconButton color="inherit">
-              <Badge color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -143,9 +143,29 @@ export  function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            {role === "Admin" && (
+              // Only users with the admin role can see the user menu item in their dashboard
+              <MenuItem
+                path="/dashboard/users"
+                label="Users"
+              >
+                <GroupIcon />
+              </MenuItem>
+            )}
+              {/* @todo hide the Tricycle menu so that only PT users can see it  */}
+              <MenuItem
+                path="/dashboard/tricycles"
+                label="Tricycles"
+              >
+                <MopedIcon />
+              </MenuItem>
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            <MenuItem
+              path="/login"
+              label="Logout"
+            >
+              <LogoutIcon />
+            </MenuItem>
           </List>
         </Drawer>
         <Box
@@ -161,7 +181,7 @@ export  function Dashboard() {
           }}
         >
           <Toolbar />
-         
+
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Outlet />
             <Copyright sx={{ pt: 4 }} />

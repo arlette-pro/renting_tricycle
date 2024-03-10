@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -14,8 +12,13 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../service";
+
+
 
 function Copyright(props) {
+
   return (
     <Typography
       variant="body2"
@@ -38,19 +41,52 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 
-export function Register() {
+export function Register(props) {
   const [role, setRole] = useState("");
+  const navigate = useNavigate();
+
   const handleChange = (event) => {
     setRole(event.target.value);
   };
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      confirmPassword: formData.get("confirmPassword"),
+      role: formData.get("role"),
+    }
+    console.log(data);
+    if (!data.password) {
+      alert("Missing password")
+      return
+    }
+    if (data.password !== data.confirmPassword) {
+      alert("Password mismatch")
+      return
+    }
+    await register(data)
   };
+
+  async function register(data) {
+    try {
+      const { message, newUser } = await registerUser(data)
+      console.log({ message, newUser })
+      props.onLogin(newUser)
+      if (newUser.role === "Admin") {
+        navigate("/dashboard/users");
+        return
+      }
+      navigate("/dashboard/tricycles");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong during registration")
+    }
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -121,10 +157,10 @@ export function Register() {
               margin="normal"
               required
               fullWidth
-              name="ConfirmPassword"
-              label="ConfirmPassword"
+              name="confirmPassword"
+              label="Confirm password"
               type="password"
-              id="ConfirmPassword"
+              id="confirmPassword"
               autoComplete="current-password"
             />
             <FormControl

@@ -1,7 +1,7 @@
 import React from 'react'
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import TricycleTable from '../components/user./TricycleTable';
+import TricycleTable from '../components/user/TricycleTable';
 
 export const Tricycle = () => {
   return (

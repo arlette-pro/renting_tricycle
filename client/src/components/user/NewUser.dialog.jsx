@@ -1,4 +1,5 @@
 import * as React from "react";
+import CircularProgress from '@mui/material/CircularProgress';
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
@@ -12,12 +13,15 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { adminCreateUser } from "../../service"
 
 export default function NewUserDialog(props) {
   const [open, setOpen] = React.useState(false);
-  const [ name, setName ] = React.useState("")
+  const [ firstName, setFirstName ] = React.useState("")
+  const [ lastName, setLastName ] = React.useState("")
   const [ email, setEmail ] = React.useState("")
   const [ role, setRole ] = React.useState(null)
+  const [ loading, setLoading ] = React.useState(false)
 
   React.useEffect(
       () => {
@@ -32,7 +36,8 @@ export default function NewUserDialog(props) {
         return
     }
     setOpen(true)
-    setName(toEdit.name)
+    setFirstName(toEdit.firstName)
+    setLastName(toEdit.lastName)
     setRole(toEdit.role)
     setEmail(toEdit.email)
   }
@@ -49,6 +54,27 @@ export default function NewUserDialog(props) {
     setOpen(false);
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true)
+    try {
+      const formData = new FormData(event.currentTarget);
+      const formJson = Object.fromEntries(formData.entries());
+      const { email, role, firstName, lastName } = formJson;
+      const data = { email, role, firstName, lastName }
+      console.log(data)
+      const { user } = await adminCreateUser(data)
+      // @question here: what's the password of the user created using the new user modal?
+      props.onNewUser(user);
+      handleClose();
+    } catch (error) {
+      console.error(error)
+      alert("error creating new user")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <React.Fragment>
       {/* <Button variant="outlined" onClick={handleClickOpen}>
@@ -62,15 +88,7 @@ export default function NewUserDialog(props) {
         onClose={handleClose}
         PaperProps={{
           component: "form",
-          onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const { email, role, name } = formJson;
-            console.log({ email, role, name });
-            props.onNewUser({ email, role, name });
-            handleClose();
-          },
+          onSubmit: handleSubmit,
         }}
       >
         <DialogTitle>Subscribe</DialogTitle>
@@ -82,13 +100,26 @@ export default function NewUserDialog(props) {
             autoFocus
             required
             margin="dense"
-            id="name"
-            name="name"
-            label="Name"
+            id="firstName"
+            name="firstName"
+            label="First name"
             type="string"
             fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="lastName"
+            name="lastName"
+            label="Last name"
+            type="string"
+            fullWidth
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
             variant="standard"
           />
           <TextField
@@ -130,7 +161,15 @@ export default function NewUserDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Create</Button>
+          <Button type="submit">
+            {loading ? (
+              <CircularProgress size={16}/>
+            ) : (
+              <>
+                Create
+              </>
+            )}
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

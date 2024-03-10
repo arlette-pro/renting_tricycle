@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { loginUser } from "../service"
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -30,15 +30,44 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export function Login() {
-  const handleSubmit = (event) => {
+export function Login(props) {
+  const [ email, setEmail ] = useState("ana@gmail.com")
+  const [ password, setPassword ] = useState("12345678")
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    }
+    if (!data.password) {
+      alert("Missing password")
+      return
+    }
+    if (!data.email) {
+      alert("Missing email")
+      return
+    }
+    await login(data)
   };
+
+  async function login(data) {
+    try {
+      const { user } = await loginUser(data)
+      // saving user and user's role in react context
+      console.log(user);
+      props.onLogin(user)
+      if (user.role === "Admin") {
+          navigate("/dashboard/users");
+          return
+      }
+      navigate("/dashboard/tricycles");
+    } catch (error) {
+      console.error(error)
+      alert("Error logging in")
+    }
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -66,6 +95,8 @@ export function Login() {
               id="email"
               label="Email Address"
               name="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
               autoFocus
             />
@@ -75,11 +106,13 @@ export function Login() {
               fullWidth
               name="password"
               label="Password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               type="password"
               id="password"
               autoComplete="current-password"
             />
-          
+
             <Button
               type="submit"
               fullWidth
@@ -89,7 +122,7 @@ export function Login() {
               Sign In
             </Button>
             <Grid container>
-              
+
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Register"}

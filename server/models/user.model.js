@@ -28,7 +28,7 @@ const UserSchema = new Schema(
       validate: (email) => (email ? true : false),
 
     },
-   
+
     role: {
       type: String,
       required: true,
@@ -48,18 +48,18 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 // we will not save the confirm password in the database
-UserSchema.virtual("confirmedPassword")
-    .get( () => this.confirmedPassword)
-    .set( value => this.confirmedPassword = value)
+UserSchema.virtual("confirmPassword")
+    .get( () => this.confirmPassword)
+    .set( value => this.confirmPassword = value)
 
 
 //validation for password matching
 UserSchema.pre("validate", function(next){
-    if (this.confirmedPassword !== this.password){
-        this.invalidate("confirmedPassword", "The password and confirmed password must match!")
+    if (this.confirmPassword !== this.password){
+        this.invalidate("confirmPassword", "The password and confirm password must match!")
     }
     next(); // continue validating and running like normal
-})    
+})
 
 //  hash the password before we save
 UserSchema.pre("save", function(next) {

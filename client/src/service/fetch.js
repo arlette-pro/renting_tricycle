@@ -1,17 +1,72 @@
-async function postData(url = "", data = {}) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "same-origin", // include, *same-origin, omit
-        headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(data), // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
+import axios from "axios"
+
+const prefix = "http://localhost:8000/api/v1"
+
+/**
+ * @param {string=} suffix
+ * @returns
+ */
+export async function getData(suffix) {
+    let url = prefix
+    if (suffix) {
+        url += `/${suffix}`
+    }
+    const response = await axios.get(
+        url,
+        { withCredentials: true},
+    )
+    return response.data
+}
+
+/**
+ * @param {any} data
+ * @param {string=} suffix
+ * @returns
+ */
+export async function postData(data = {}, suffix) {
+    let url = prefix
+    if (suffix) {
+        url += `/${suffix}`
+    }
+    const response = await axios.post(
+        url,
+        data,
+        { withCredentials: true},
+    )
+    return response.data
+}
+
+/**
+ * @param {LoginDto} info
+ * @returns {Promise<{ user: User}>}
+ */
+export async function loginUser(info) {
+    // sending login as the suffix means the entire url becomes `http://localhost:8000/api/v1/login`
+    return postData(info, "login")
+}
+
+/**
+ * @param {RegisterUserDto} info
+ * @returns {Promise<{ message: string, newUser: User}>}
+ */
+export async function registerUser(info) {
+    // sending login as the suffix means the entire url becomes `http://localhost:8000/api/v1/user/register`
+    return postData(info, "user/register")
+}
+
+/**
+ * @returns {Promise<{ users: User[] }>}
+ */
+export async function getUsers() {
+    // sending login as the suffix means the entire url becomes `http://localhost:8000/api/v1/users`
+    return getData("user")
+}
+
+/**
+ * @param {AdminRegisterUserDto} info
+ * @returns {Promise<{ user: User }>}
+ */
+export async function adminCreateUser(info) {
+    // sending login as the suffix means the entire url becomes `http://localhost:8000/api/v1/user/register`
+    return postData(info, "user")
 }

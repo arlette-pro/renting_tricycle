@@ -1,7 +1,8 @@
 const UserModel = require("../models/user.model");
-const secret_key = process.env.SECRET_KEY;
 const jwt = require("jsonwebtoken"); // for our web tokens
 const bcrypt = require("bcryptjs")
+
+const secret_key = process.env.SECRET_KEY;
 
 function isUserActive(user) {
   return user.deactivated === false;
@@ -10,13 +11,15 @@ function isUserActive(user) {
 module.exports = {
   registerNewUser: async (req, res) => {
     try {
-      const {deactivated,confirmedPassword, ...rest} = req.body
-      rest.confirmedPassword = confirmedPassword;
+      const { deactivated, ...rest } = req.body
+      console.log(
+        JSON.stringify(req.body)
+      )
       const newUser = await UserModel.create(rest);
 
       const { _id, firstName, lastName, email, role, createdAt, updatedAt } = newUser;
       const resUser = { firstName, lastName, email, role, createdAt, updatedAt, _id };
-      //     // create a token and save the user's id and sign iff with the secret key from our .env file
+      // create a token and save the user's id and sign iff with the secret key from our .env file
       const userToken = jwt.sign(
         {
           id: newUser._id,
@@ -25,7 +28,7 @@ module.exports = {
       );
       res
       .cookie("userToken", userToken, {
-        httpOnly: true,
+        httpOnly: false,
       })
       .status(201)
       .json({ message: "success!", newUser: resUser });
@@ -45,7 +48,7 @@ module.exports = {
      *  res.status(UNAUTHORIZED).json({ message: "Invalid email/password combination"})
      * }
      */
-  
+
       if (!user) {
         res.status(400).json({ message: 'Invalid Login Credentials' });
       } else {
@@ -53,18 +56,30 @@ module.exports = {
           req.body.password,
           user.password
         );
-  
+
         if (!doPasswordsMatch) {
           res.status(400).json({ message: 'Invalid Login Credentials' });
-        } else {
-          const userToken = jwt.sign({ id: user._id }, secret_key);
-  
-          res
-            .cookie('usertoken', userToken, {
-              httpOnly: true,
-            })
-            .json({ msg: 'success!' });
+          return
         }
+
+        if (user.deactivated) {
+          res.status(401).json({ message: "This user is deactivated" })
+        }
+
+        const userToken = jwt.sign({ id: user._id }, secret_key);
+
+        const apiUser = {
+          id: user.id,
+          role: user.role,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        }
+        res
+          .cookie('usertoken', userToken, {
+            httpOnly: true,
+          })
+          .json({ user: apiUser });
       }
     } catch (err) {
       res.status(500).json({ message: 'An error occurred' });
@@ -141,19 +156,29 @@ module.exports = {
         return;
       }
 
-      // @todo: create and hash password here and include in the user object
+      // @question: where do you hash the password before saving in the db?
       const userObject = {
         firstName,
         lastName,
         role,
         email,
         deactivated: false,
+        password: process.env.DEFAULT_PASSWORD,
+        confirmPassword: process.env.DEFAULT_PASSWORD,
       };
       const newUser = await UserModel.create(userObject);
       if (!newUser) {
         res.status(500).json({ message: "Error creating user" });
       }
-      return res.json(newUser);
+      const apiUser = {
+        id: newUser.id,
+        role: newUser.role,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+      }
+
+      return res.json({ user: apiUser });
     } catch (err) {
       res.status(500).json(err);
     }

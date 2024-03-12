@@ -22,12 +22,15 @@ module.exports = {
     },
     createTricycle: (req, res) => {
         // @todo get userId from cookie    `userToken` and add to the tricycle
-        /**
-         * const { deactivate, ...rest } = req.body
-         * const userId = unparse(jwt).userId
-         * TricycleModel.create({...rest, userId, deactivated: false })
-         */
-        TricycleModel.create(req.body)
+        
+         const { deactivate, ...rest } = req.body
+         const userId = unparse(jwt).userId
+        //  added
+        const userToken = req.cookies.userToken;
+        
+
+
+        TricycleModel.create({...rest, userId, deactivated: false })
         .then((newTricycle) => {
             res.json(newTricycle)
         })

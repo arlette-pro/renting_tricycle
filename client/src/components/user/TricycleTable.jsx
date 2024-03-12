@@ -20,39 +20,39 @@ function createData(id, brand, weightCapacity, volumeCapacity, speciality, dispo
 }
 
 const rowVar = [
-  createData(
-    0,
-    'PT',
-    'Elvis Presley',
-    'Tupelo, MS',
-    'VISA ⠀•••• 3719',
-    312.44,
-  ),
-  createData(
-    1,
-    'LT',
-    'Paul McCartney',
-    'London, UK',
-    'VISA ⠀•••• 2574',
-    866.99,
-  ),
-  createData(2, 'PT', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(
-    3,
-    'PT',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX ⠀•••• 2000',
-    654.39,
-  ),
-  createData(
-    4,
-    'Admin',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
-    212.79,
-  ),
+  // createData(
+  //   0,
+  //   '',
+  //   'Elvis Presley',
+  //   'Tupelo, MS',
+  //   'VISA ⠀•••• 3719',
+  //   312.44,
+  // ),
+  // createData(
+  //   1,
+  //   'LT',
+  //   'Paul McCartney',
+  //   'London, UK',
+  //   'VISA ⠀•••• 2574',
+  //   866.99,
+  // ),
+  // createData(2, 'PT', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
+  // createData(
+  //   3,
+  //   'PT',
+  //   'Michael Jackson',
+  //   'Gary, IN',
+  //   'AMEX ⠀•••• 2000',
+  //   654.39,
+  // ),
+  // createData(
+  //   4,
+  //   'Admin',
+  //   'Bruce Springsteen',
+  //   'Long Branch, NJ',
+  //   'VISA ⠀•••• 5919',
+  //   212.79,
+  // ),
   
 ];
 

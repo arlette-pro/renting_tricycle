@@ -104,6 +104,7 @@ module.exports = {
         user.deactivated = true;
         await user.save();
         // @todo remove password before returning user info
+        user.password = undefined; //done
         res.json(user);
       })
       .catch((err) => {
@@ -129,6 +130,7 @@ module.exports = {
         }
         await user.save();
         // @todo remove password before returning user info
+        user.password = undefined; //here
         res.json(user);
       })
       .catch((err) => {
@@ -141,7 +143,11 @@ module.exports = {
         // filter out deactivated users
         const filteredUsers = allUsers.filter(isUserActive);
         // @todo remove password before returning user info
-        res.json({ users: filteredUsers });
+        const usersWithoutPassword = filteredUsers.map((user) => {
+          user.password = undefined;  //here
+          return user;
+        });
+        res.json({ users: usersWithoutPassword });
       })
       .catch((err) => {
         res.status(500).json(err);
@@ -157,14 +163,17 @@ module.exports = {
       }
 
       // @question: where do you hash the password before saving in the db?
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const password = process.env.DEFAULT_PASSWORD
+
       const userObject = {
         firstName,
         lastName,
         role,
         email,
         deactivated: false,
-        password: process.env.DEFAULT_PASSWORD,
-        confirmPassword: process.env.DEFAULT_PASSWORD,
+        password:hashedPassword,
+        confirmPassword: hashedPassword,
       };
       const newUser = await UserModel.create(userObject);
       if (!newUser) {

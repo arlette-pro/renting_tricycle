@@ -5,6 +5,7 @@ import UserTable from '../components/user/UserTable';
 import {
   getUsers,
 } from "../service"
+import { Typography } from '@mui/material';
 
 export const Users = () => {
   const [ users, setUsers ] = useState([])
@@ -39,7 +40,8 @@ export const Users = () => {
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
           {/* @todo style this to look beautiful */}
-          <span style={{ color: "red" }}>Loading users...</span>
+          {/* <span style={{ color: "red" }}>Loading users...</span> */}
+          <Typography variant="subtitle1" sx={{color: 'red', marginBottom:'1rem' }}>Loading users...</Typography>
         </Paper>
       </Grid>
       </Grid>

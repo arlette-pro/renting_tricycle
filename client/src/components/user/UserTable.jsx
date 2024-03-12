@@ -113,8 +113,7 @@ export default function UserTable(props) {
                   Disable<DisabledIcon />
                 </IconButton>
               </TableCell>
-              {/* <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell> */}
+             
             </TableRow>
           ))}
         </TableBody>

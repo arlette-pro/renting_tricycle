@@ -93,9 +93,9 @@ export function Dashboard() {
     setOpen(!open);
   };
 
-  // useEffect(() => {
-  //   setRole(connectedUser.role ?? null);
-  // }, [connectedUser]);
+  useEffect(() => {
+    setRole(connectedUser.role ?? null);
+  }, [connectedUser]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -151,8 +151,9 @@ export function Dashboard() {
                 <GroupIcon />
               </MenuItem>
             )}
-            {role === ("PT", "Admin") && (
-              /* Only users with the PT role can see the tricycles menu item in their dashboard */
+            {(role === "PT" || role === "Admin") && (
+              /* Only users with the PT role can see the tricycles menu item in
+            their dashboard */
               <MenuItem path="/dashboard/tricycles" label="Tricycles">
                 <MopedIcon />
               </MenuItem>

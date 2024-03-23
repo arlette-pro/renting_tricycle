@@ -50,6 +50,19 @@ export default function NewTricycleDialog(props) {
     setOpen(false);
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:8000/api/allTricycles", tricycle)
+      .then((res) => {
+        setAllTricycles([...allTricycles, res.data]);
+      })
+      .catch((err) => {
+        // console.log(err.response.data.message);
+        setErrors(err.response.data.errors);
+      });
+  }
+
   return (
     <React.Fragment>
       {/* <Button variant="outlined" onClick={handleClickOpen}>

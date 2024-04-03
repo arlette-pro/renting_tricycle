@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "@mui/material/Link";
-import img1 from "../images/TRICYCLE-BAZAR.jpg"
-import ChatIcon from '@mui/icons-material/Chat';
+import img1 from "../images/TRICYCLE-BAZAR.jpg";
+import ChatIcon from "@mui/icons-material/Chat";
 import Container from "@mui/material/Container";
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import {
   AppBar,
   Button,
@@ -20,8 +20,24 @@ import {
   Typography,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const DetailsTricycle = () => {
+  const { id } = useParams();
+  const [data, setData] = useState({});
+  const { brand, weightCapacity, volumeCapacity, disponibility, speciality } =
+    data;
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/tricycle/${id}`)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div>
       <CssBaseline />
@@ -31,7 +47,7 @@ const DetailsTricycle = () => {
           <Typography variant="h6">Tricycle Details</Typography>
         </Toolbar>
       </AppBar>
-      <main >
+      <main>
         <div>
           <Container maxWidth="sm">
             <Typography
@@ -53,8 +69,8 @@ const DetailsTricycle = () => {
             // height: "50vh",
           }}
         >
-          <Card sx={{maxWidth: 400 }} align="center">
-          <CardMedia
+          <Card sx={{ maxWidth: 400 }} align="center">
+            <CardMedia
               component="img"
               alt="green iguana"
               height="170"
@@ -64,30 +80,29 @@ const DetailsTricycle = () => {
               <Typography gutterBottom variant="h5" component="div">
                 Lizard
               </Typography>
-              <Typography variant="body2"  color="text.secondary">
-               <Typography>
-               <p>Brand: </p>
-               </Typography>
-                <p>weightCapacity: Kg</p>
-                <p>volumeCapacity:</p>
-                <p>speciality: </p>
-                <p>disponibility: </p>
+              <Typography variant="body2" color="text.secondary">
+                <Typography>
+                  <p>Brand: {brand}</p>
+                </Typography>
+                <p>weightCapacity: {weightCapacity}Kg</p>
+                <p>volumeCapacity: {volumeCapacity}</p>
+                <p>speciality: {speciality}</p>
+                <p>disponibility: {disponibility} </p>
               </Typography>
             </CardContent>
             <CardActions>
-            
               <Grid container justifyContent="space-between">
                 <Grid item xs={6}>
                   <Tooltip placement="left" title="Book">
-                  <IconButton>
-                    <BookOnlineIcon/>
+                    <IconButton>
+                      <BookOnlineIcon />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid item xs={6}>
                   <Tooltip placement="right" title="Chat">
-                  <IconButton>
-                    <ChatIcon/>
+                    <IconButton>
+                      <ChatIcon />
                     </IconButton>
                   </Tooltip>
                 </Grid>

@@ -53,7 +53,7 @@ export default function NewTricycleDialog(props) {
   const submitHandler = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8000/api/allTricycles", tricycle)
+      .post("http://localhost:8000/api/tricycles", tricycle)
       .then((res) => {
         setAllTricycles([...allTricycles, res.data]);
       })
@@ -61,7 +61,7 @@ export default function NewTricycleDialog(props) {
         // console.log(err.response.data.message);
         setErrors(err.response.data.errors);
       });
-  }
+  };
 
   return (
     <React.Fragment>
